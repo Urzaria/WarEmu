@@ -107,6 +107,7 @@ namespace WorldServer
 
         static public List<GmCommandHandler> TeleportCommands = new List<GmCommandHandler>()
         {
+            new GmCommandHandler("q",TeleportQuick, null, 0, 1, "Teleport to zone <name>"),
             new GmCommandHandler("map",TeleportMap, null, 0, 4, "Teleport to point <zoneid,Wx,Wy,Wz>"),
             new GmCommandHandler("appear",TeleportAppear, null, 0, 1, "Appear to player <name>"),
             new GmCommandHandler("summon",TeleportSummon, null, 0, 1, "Summon player <name>"),
@@ -1273,6 +1274,68 @@ namespace WorldServer
         #endregion
 
         #region Teleport
+
+        /// <summary>
+        /// Teleport to destination name
+        /// </summary>
+        /// <param name="Plr"></param>
+        /// <param name="ref"></param>
+        static public bool TeleportQuick(Player Plr, ref List<string> Values)
+        {
+            string location = GetString(ref Values);
+            int ZoneID = 0;
+            int WorldX = 0;
+            int WorldY = 0;
+            int WorldZ = 0;
+
+            switch (location)
+            {
+                //****************************tier 1
+                case "na":
+                case "norsca": { ZoneID = 100; WorldX = 858429; WorldY = 859973; WorldZ = 6023; break; } //Norsca
+                case "nd":
+                case "nordland": { ZoneID = 106; WorldX = 841795; WorldY = 911886; WorldZ = 5192; break; }  //Nordland
+                case "ed":
+                case "ekrund": { ZoneID = 6; WorldX = 777295; WorldY = 879139; WorldZ = 7160; break; }  //Ekrund
+                case "bn":
+                case "bloodhorn": { ZoneID = 11; WorldX = 817217; WorldY = 884409; WorldZ = 5856; break; }  //Mount Bloodhorn (Bluthornberg)
+                case "be":
+                case "blightedisle": { ZoneID = 200; WorldX = 1055196; WorldY = 1049202; WorldZ = 7215; break; }  //The Blighted Isle (Insel des Unheils)
+                case "ce":
+                case "chrace": { ZoneID = 206; WorldX = 1055079; WorldY = 1106951; WorldZ = 9840; break; }  //Chrace
+
+                //*****************************tier 2
+
+                //*****************************tier 3
+                case "an":
+                case "avelorn": { ZoneID = 202; WorldX = 1429931; WorldY = 1441203; WorldZ = 5082; break; }//Avelorn
+                case "bs":
+                case "blackfirepass": { ZoneID = 8; WorldX = 1262135; WorldY = 861625; WorldZ = 4660; break; }   //black fire pass (Nachfeuerpass)
+
+                //*****************************tier 4
+                case "bg":
+                case "blackcrag": { ZoneID = 3; WorldX = 1404015; WorldY = 1003851; WorldZ = 9768; break; }  //black crag (Schwarzfels)
+
+                //*****************************other
+                case "ad":
+                case "altdorf": { ZoneID = 162; WorldX = 123862; WorldY = 131701; WorldZ = 12680; break; }  //Altdorf
+                case "ic":
+                case "inevitablecity": { ZoneID = 161; WorldX = 436798; WorldY = 128899; WorldZ = 17495; break; }  //The Inevitable City
+                case "bp":
+                case "butcherspass": { ZoneID = 4; WorldX = 1399239; WorldY = 1033511; WorldZ = 8226; break; }  //butchers pass (Fleischerpass)
+            }
+
+            Plr.Teleport((UInt16)ZoneID, (uint)WorldX, (uint)WorldY, (UInt16)WorldZ, 0);
+
+            GMCommandLog Log = new GMCommandLog();
+            Log.PlayerName = Plr.Name;
+            Log.AccountId = (uint)Plr.Client._Account.AccountId;
+            Log.Command = "TELEPORT TO " + ZoneID + " " + WorldX + " " + WorldY;
+            Log.Date = DateTime.Now;
+            WorldMgr.Database.AddObject(Log);
+
+            return true;
+        }
 
         static public bool TeleportMap(Player Plr, ref List<string> Values)
         {
