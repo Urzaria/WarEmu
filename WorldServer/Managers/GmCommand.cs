@@ -650,10 +650,14 @@ namespace WorldServer
             Plr.CalcWorldPositions();
             Object Obj = Plr.CbtInterface.GetCurrentTarget();
 
-            string Pos = "Px="+Plr.X+",Py="+Plr.Y+",Pz="+Plr.Z;
-            Pos += ",Wx=" + Plr._Value.WorldX + ",Wy=" + Plr._Value.WorldY + ",Wz=" + Plr._Value.WorldZ;
-            Pos += ",Ox=" + Plr.XOffset + ",Oy=" + Plr.YOffset;
-            Pos += ",Wh=" + Plr._Value.WorldO + ",Ph=" + Plr.Heading + ",HeightMap=" + ClientFileMgr.GetHeight(Plr.Zone.ZoneId, Plr.X, Plr.Y);
+            string Pos = "Player Position:" + 
+                "\nX= " + Plr.X + ", Y= " + Plr.Y + ", Z= " + Plr.Z + ", H= " + Plr.Heading + 
+                "\nWorld Position:" + 
+                "\nX = " + Plr._Value.WorldX + ", Y = " + Plr._Value.WorldY + ", Z = " + Plr._Value.WorldZ + 
+                "\nOffset Posion:" +
+                "\nX=" + Plr.XOffset + ", Y= " + Plr.YOffset + 
+                "\nHeightMap= " + ClientFileMgr.GetHeight(Plr.Zone.ZoneId, Plr.X, Plr.Y);
+
             Plr.SendMessage(0, "", Pos, SystemData.ChatLogFilters.CHATLOGFILTERS_EMOTE);
             if (Obj != null)
             {
